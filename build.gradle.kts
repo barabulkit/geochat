@@ -9,7 +9,7 @@ plugins {
 
 group = "xyz.barabulkit"
 version = "0.0.1-SNAPSHOT"
-java.sourceCompatibility = JavaVersion.VERSION_11
+java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     mavenCentral()
@@ -27,16 +27,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.jetbrains.exposed:exposed:0.8.5")
     implementation("org.jetbrains.exposed:spring-transaction:0.8.5")
-    implementation("net.postgis.postgis-jdbc:2.2.0")
-    implementation("com.fasterxml.com.jackson.module:jackson-module-kotlin")
-    implementation("com.github.mayconbordin:postgis-geojson:1.0")
+    implementation("net.postgis:postgis-jdbc:2.2.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.github.mayconbordin:postgis-geojson:1.0") {
+        exclude("org.postgis", "postgis-jdbc")
+    }
     implementation("org.postgresql:postgresql:9.4.1208")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 }
 
