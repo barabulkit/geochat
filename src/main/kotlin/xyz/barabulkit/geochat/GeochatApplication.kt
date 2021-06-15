@@ -11,6 +11,7 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
 import org.springframework.transaction.annotation.EnableTransactionManagement
+import xyz.barabulkit.geochat.repositories.MessageRepository
 import javax.sql.DataSource
 
 @SpringBootApplication
