@@ -2,7 +2,7 @@ var view = new ol.View({ zoom: 9 })
 
 var map = new ol.Map({
     target: "map",
-    layers: [ new ol.layer.Tile({ source: new ol.Source.OSM() })],
+    layers: [ new ol.layer.Tile({ source: new ol.source.OSM() })],
     controls: ol.control.defaults({
         attributionOptions: ({
             collapsible: false
@@ -47,7 +47,7 @@ var messageBox = new ol.Overlay({
     element: msgBoxElement,
     positioning: 'bottom-center'
 });
-map.addOverlay(messageBox)
+map.addOverlay(messageBox);
 
 map.on('click', (evt) =>{
     var coordinate = evt.coordinate;
@@ -85,7 +85,7 @@ map.on('click', (evt) =>{
                     }
                 }),
                 contentType: "application/json; charset=utf-8",
-                dataType: "json"
+                dataType: "json",
             });
             messageBox.setPosition(undefined);
             return value;
@@ -98,7 +98,7 @@ map.on('click', (evt) =>{
 
 var vectorSource = new ol.source.Vector({
     loader: (extent, resolution, projection) => {
-        var url = `/message/bbox/${extent.slice(0,3).join(',')}`
+        var url = "/message/bbox/" + extent[0] + "," + extent[1] + "," + extent[2] + "," + extent[3];
         $.ajax({
             url: url,
             dataType: 'json',
@@ -109,10 +109,12 @@ var vectorSource = new ol.source.Vector({
                     $.each(response, (index,value) => {
                         var feature = new ol.Feature({
                             geometry: new ol.geom.Point(value.location.coordinates),
-                            content: value.content
+                            content: value.content,
+                            author: value.author
                         })
+                        vectorSource.addFeature(feature);
                     });
-                    vectorSource.addFeature(feature);
+
                 }
             }
         });
@@ -122,7 +124,7 @@ var vectorSource = new ol.source.Vector({
 
 var vector = new ol.layer.Vector({
     source: vectorSource,
-    style: new ol.style.Style({ image: new ol.style.Icon({ src: "message-box.png", scale: 0.5 }) })
+    style: new ol.style.Style({ image: new ol.style.Icon({ src: "message.png", scale: 0.5 }) })
 })
 
 map.addLayer(vector);

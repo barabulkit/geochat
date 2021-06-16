@@ -17,7 +17,7 @@ class MessageRepositoryImpl : MessageRepository{
     override fun createTable() = SchemaUtils.create(Messages)
 
     override fun insert(t: Message): Message {
-        t.id = Messages.insert(insertQuery(t)) get Messages.id
+        t.id = Messages.insert(insertQuery(t))[Messages.id]
         return t
     }
 
@@ -28,7 +28,7 @@ class MessageRepositoryImpl : MessageRepository{
 
     override fun findByBoundingBox(box: PGbox2d): Iterable<Message> = Messages.select {
         Messages.location within box
-    }.map { Message(it[Messages.content], it[Messages.location], it[Messages.id]) }
+    }.map { it.getMessage() }
 
     override fun updateLocation(id: Int, location: Point) {
         location.srid = 4326

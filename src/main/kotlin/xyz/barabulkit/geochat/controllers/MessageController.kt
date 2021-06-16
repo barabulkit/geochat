@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*
 import xyz.barabulkit.geochat.models.Message
 import xyz.barabulkit.geochat.repositories.MessageRepository
 import xyz.barabulkit.geochat.utils.ReactiveBroadcaster
+import xyz.barabulkit.geochat.utils.removeZ
 
 @RestController
 @RequestMapping("/message")
@@ -16,7 +17,8 @@ class MessageController(val repository: MessageRepository) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody message: Message): Message {
-        val msg = repository.insert(message);
+        message.location = removeZ(message.location)
+        val msg = repository.insert(message)
         broadcaster.send(msg)
         return msg
     }
